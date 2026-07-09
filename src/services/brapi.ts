@@ -56,6 +56,23 @@ type BrapiQuoteResponse = {
 
 let hasWarnedMissingBrapiKey = false;
 
+const BRAPI_FETCH_TIMEOUT_MS = 10_000;
+
+function isBuildTime() {
+  return process.env.NEXT_PHASE === "phase-production-build";
+}
+
+async function fetchWithTimeout(url: string, init?: RequestInit) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), BRAPI_FETCH_TIMEOUT_MS);
+
+  try {
+    return await fetch(url, { ...init, signal: controller.signal });
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
 const demoQuotes: Record<string, BrapiQuoteResponse> = {
   PETR4: {
     symbol: "PETR4",
@@ -450,8 +467,8 @@ async function fetchBrapiQuote(
   tickers: string[],
   options?: { range?: string; interval?: string; fundamental?: boolean; dividends?: boolean }
 ): Promise<BrapiQuoteResponse[]> {
-  if (!process.env.BRAPI_API_KEY) {
-    if (!hasWarnedMissingBrapiKey) {
+  if (!process.env.BRAPI_API_KEY || isBuildTime()) {
+    if (!process.env.BRAPI_API_KEY && !hasWarnedMissingBrapiKey) {
       console.warn("BRAPI_API_KEY não configurada. Usando dados demonstrativos locais.");
       hasWarnedMissingBrapiKey = true;
     }
@@ -471,7 +488,7 @@ async function fetchBrapiQuote(
   const url = `https://brapi.dev/api/quote/${tickerParam}?${query}${getApiKeyParam()}`;
 
   try {
-    const response = await fetch(url, { next: { revalidate: 300 } });
+    const response = await fetchWithTimeout(url, { next: { revalidate: 300 } });
 
     if (!response.ok) {
       console.error(`Erro ao buscar dados na Brapi: ${response.status} ${response.statusText}`);
