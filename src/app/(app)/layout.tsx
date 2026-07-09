@@ -2,17 +2,22 @@ import { Header } from "@/components/layout/Header";
 import { Navbar } from "@/components/layout/Navbar";
 import { TickerTape } from "@/components/layout/TickerTape";
 import Link from "next/link";
+import { getQuotes } from "@/services/brapi";
 
-export default function AppLayout({
+const TICKER_TAPE_SYMBOLS = ["PETR4", "VALE3", "ITUB4", "BBDC4", "MGLU3", "WEGE3", "SUZB3", "ELET3", "B3SA3"];
+
+export default async function AppLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const tickerQuotes = await getQuotes(TICKER_TAPE_SYMBOLS);
+
   return (
     <div className="flex min-h-screen w-full flex-col">
       <Header />
       <Navbar />
-      <TickerTape />
+      <TickerTape initialQuotes={tickerQuotes} />
       <main className="flex flex-1 flex-col gap-4 bg-muted/30 p-4 lg:gap-6 lg:p-6">
         {children}
       </main>

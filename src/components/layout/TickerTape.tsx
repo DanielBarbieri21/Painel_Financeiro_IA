@@ -1,24 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import type { MarketQuote } from "@/lib/market-types";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import Link from "next/link";
 
-const TICKERS = ["PETR4", "VALE3", "ITUB4", "BBDC4", "MGLU3", "WEGE3", "SUZB3", "ELET3", "B3SA3"];
-
-export function TickerTape() {
-  const [quotes, setQuotes] = useState<MarketQuote[]>([]);
-
-  useEffect(() => {
-    const params = new URLSearchParams({ tickers: TICKERS.join(",") });
-
-    fetch(`/api/market/quotes?${params}`)
-      .then((response) => (response.ok ? response.json() : null))
-      .then((data) => setQuotes(data?.quotes || []))
-      .catch(() => setQuotes([]));
-  }, []);
+export function TickerTape({ initialQuotes }: { initialQuotes: MarketQuote[] }) {
+  const quotes = initialQuotes;
 
   if (quotes.length === 0) {
     return (

@@ -583,15 +583,33 @@ function calculateOpportunityScore(quote: MarketQuote, history: HistoricalPrice[
 }
 
 export async function getQuantitativeOpportunities(limit = 4): Promise<Opportunity[]> {
-  const quotes = await getQuotes(DEFAULT_TICKERS);
-  const histories = await getHistoricalPricesForTickers(
-    quotes.map((quote) => quote.symbol),
-    "3mo",
-    "1d"
-  );
+  const [quotes, histories] = await Promise.all([
+    getQuotes(DEFAULT_TICKERS),
+    getHistoricalPricesForTickers(DEFAULT_TICKERS, "3mo", "1d"),
+  ]);
 
   return quotes
     .map((quote) => calculateOpportunityScore(quote, histories[quote.symbol] || []))
     .sort((a, b) => b.score - a.score)
     .slice(0, limit);
+}
+
+export async function getDashboardData(moversLimit = 5, opportunitiesLimit = 4) {
+  const [quotes, histories] = await Promise.all([
+    getQuotes(DEFAULT_TICKERS),
+    getHistoricalPricesForTickers(DEFAULT_TICKERS, "3mo", "1d"),
+  ]);
+
+  const orderedByChange = [...quotes].sort((a, b) => b.change - a.change);
+  const movers = {
+    gainers: orderedByChange.slice(0, moversLimit),
+    losers: orderedByChange.slice(-moversLimit).reverse(),
+  };
+
+  const opportunities = quotes
+    .map((quote) => calculateOpportunityScore(quote, histories[quote.symbol] || []))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, opportunitiesLimit);
+
+  return { movers, opportunities, quotes };
 }

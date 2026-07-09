@@ -1,6 +1,5 @@
 import { Suspense } from "react";
 import { MetricCard } from "@/components/dashboard/MetricCard";
-import { MarketChart } from "@/components/dashboard/MarketChart";
 import { MoversTable } from "@/components/dashboard/MoversTable";
 import { Opportunities } from "@/components/dashboard/Opportunities";
 import {
@@ -20,9 +19,9 @@ import {
   Clock,
 } from "lucide-react";
 import { BrokerLinks } from "@/components/dashboard/BrokerLinks";
-import { AdCarousel } from "@/components/dashboard/AdCarousel";
-import { getQuote } from "@/services/brapi";
+import { getQuote, getDashboardData } from "@/services/brapi";
 import { Badge } from "@/components/ui/badge";
+import { LazyMarketChart, LazyAdCarousel } from "@/components/dashboard/LazyComponents";
 
 function DashboardHeader() {
   const usingRealData = Boolean(process.env.BRAPI_API_KEY);
@@ -115,6 +114,17 @@ async function DashboardMetrics({ search }: { search?: string }) {
   );
 }
 
+async function DashboardSidebar() {
+  const { movers, opportunities } = await getDashboardData();
+
+  return (
+    <div className="flex flex-col gap-6">
+      <Opportunities data={opportunities} />
+      <MoversTable data={movers} />
+    </div>
+  );
+}
+
 export default async function DashboardPage({
   searchParams,
 }: {
@@ -135,21 +145,23 @@ export default async function DashboardPage({
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2 flex flex-col gap-6">
-          <MarketChart initialTicker={ticker} />
+          <LazyMarketChart initialTicker={ticker} />
         </div>
-        <div className="flex flex-col gap-6">
-          <Suspense fallback={<OpportunitiesSkeleton />}>
-            <Opportunities />
-          </Suspense>
-          <Suspense fallback={<MoversTableSkeleton />}>
-            <MoversTable />
-          </Suspense>
-        </div>
+        <Suspense
+          fallback={
+            <div className="flex flex-col gap-6">
+              <OpportunitiesSkeleton />
+              <MoversTableSkeleton />
+            </div>
+          }
+        >
+          <DashboardSidebar />
+        </Suspense>
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2 flex flex-col gap-6">
-          <AdCarousel />
+          <LazyAdCarousel />
         </div>
         <div className="flex flex-col gap-6">
           <BrokerLinks />

@@ -6,12 +6,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Lightbulb, Info } from "lucide-react";
-import { getQuantitativeOpportunities } from "@/services/brapi";
 import { Button } from "../ui/button";
+import type { Opportunity } from "@/lib/market-types";
 
-export async function Opportunities() {
-  const opportunities = await getQuantitativeOpportunities();
-
+export function Opportunities({ data }: { data: Opportunity[] }) {
   return (
     <Card>
       <CardHeader>
@@ -22,11 +20,11 @@ export async function Opportunities() {
         <CardDescription>Score por momentum, liquidez, valuation, dividendos e risco.</CardDescription>
       </CardHeader>
       <CardContent>
-        {opportunities.length === 0 ? (
+        {data.length === 0 ? (
           <p className="py-6 text-center text-sm text-muted-foreground">Dados indisponíveis no momento.</p>
         ) : (
           <ul className="space-y-4">
-            {opportunities.map((opp) => (
+            {data.map((opp) => (
               <li key={opp.ticker} className="flex items-center justify-between gap-3">
                 <div>
                   <p className="font-semibold">{opp.ticker}</p>

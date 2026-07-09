@@ -15,11 +15,10 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "../ui/badge";
-import { getMarketMovers } from "@/services/brapi";
 import type { MarketQuote } from "@/lib/market-types";
 
-export async function MoversTable() {
-  const { gainers, losers } = await getMarketMovers();
+export function MoversTable({ data }: { data: { gainers: MarketQuote[]; losers: MarketQuote[] } }) {
+  const { gainers, losers } = data;
 
   return (
     <Card>
