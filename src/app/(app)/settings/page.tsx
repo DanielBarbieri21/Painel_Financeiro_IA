@@ -95,13 +95,13 @@ export default function SettingsPage() {
             </div>
             <div className="space-y-5 text-base leading-8 text-foreground/80">
               <p>
-                Sou graduado em Administração com ênfase em Sistemas de Informação e em Ciências Econômicas, com experiência profissional no setor financeiro, incluindo corretoras, instituições bancárias e mercado de capitais. Atualmente, estou concluindo a graduação em Engenharia de Software e cursando pós-graduação em Big Data e Inteligência Artificial.
+                Sou graduado em Administração com ênfase em Sistemas de Informação, Ciências Econômicas e Análise e Desenvolvimento de Sistemas, com experiência profissional no setor financeiro, incluindo corretoras, instituições bancárias e mercado de capitais. Atualmente, estou concluindo a graduação em Engenharia de Software e sou pós-graduado em Big Data e Inteligência Artificial.
               </p>
               <p>
                 Minha trajetória combina uma sólida compreensão do mercado financeiro com expertise em desenvolvimento de software, computação em nuvem e análise de dados. Atuo no desenvolvimento de soluções que integram tecnologia, inteligência artificial e automação para otimizar processos, apoiar decisões estratégicas e gerar valor para o negócio.
               </p>
               <p>
-                Tenho conhecimentos em Java, Spring Boot, Node.js, React, APIs REST, bancos de dados SQL/NoSQL e AWS (Cloud Practitioner), além de interesse contínuo em arquitetura de software, microsserviços, engenharia de dados e IA aplicada. Busco desenvolver soluções escaláveis, seguras e orientadas a resultados, conectando tecnologia e negócios para impulsionar inovação e eficiência.
+                Possuo conhecimentos em Java, Spring Boot, Node.js, React, Python, APIs REST, bancos de dados SQL e NoSQL, AWS Cloud e tecnologias de dados e inteligência artificial, além de interesse contínuo em arquitetura de software, microsserviços, engenharia de dados e IA aplicada. Busco desenvolver soluções escaláveis, seguras e orientadas a resultados, conectando tecnologia e negócios para impulsionar inovação, eficiência e transformação digital.
               </p>
             </div>
           </div>
